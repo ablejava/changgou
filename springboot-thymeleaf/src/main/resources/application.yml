@@ -1,4 +1,4 @@
 spring:
   thymeleaf:
-  #不启用缓存
+  #不启用模版缓存
     cache: false
