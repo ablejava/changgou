@@ -11,12 +11,14 @@ spring:
                 - PUT
                 - DELETE
       routes:
-            - id: changgou_goods_route
-              uri: lb://goods
+            - id: changgou_goods_route  #唯一标识符
+              uri: lb://goods   #指定要路由的服务
               predicates:
               - Path=/api/goods/**
+              #- Host=cloud.itheima.com** #所有以cloud.itheima.com的请求都到goods微服务
               filters:
-              - StripPrefix=1
+              - StripPrefix=1 # 将请求路径中到第1个路径去掉，请求路径以/api前缀，每次请求真实微服务网关到时候，需要使用微服务网关将/api去掉
+              # - PrefixPath=/brand  #每次在请求路径上添加前缀
               - name: RequestRateLimiter #请求数限流 名字不能随便写 ，使用默认的facatory
                 args:
                   key-resolver: "#{@ipKeyResolver}"
