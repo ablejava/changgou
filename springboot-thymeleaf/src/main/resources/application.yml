@@ -2,3 +2,4 @@ spring:
   thymeleaf:
   #不启用模版缓存
     cache: false
+    # 修改默认前缀后缀 prefix:
