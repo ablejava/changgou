@@ -21,8 +21,11 @@ spring:
               # - PrefixPath=/brand  #每次在请求路径上添加前缀
               - name: RequestRateLimiter #请求数限流 名字不能随便写 ，使用默认的facatory
                 args:
+                  # 用户身份唯一标示符
                   key-resolver: "#{@ipKeyResolver}"
+                  # 每秒钟只允许有一个请求
                   redis-rate-limiter.replenishRate: 1
+                  # 允许并发有4个请求[宽限到个数]
                   redis-rate-limiter.burstCapacity: 1
             #用户微服务
             - id: changgou_user_route

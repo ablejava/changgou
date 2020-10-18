@@ -19,6 +19,7 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- oAuth2.0认证包 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-oauth2</artifactId>

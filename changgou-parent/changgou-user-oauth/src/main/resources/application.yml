@@ -35,7 +35,7 @@ auth:
   cookieMaxAge: -1
 encrypt:
   key-store:
-    location: classpath:/changgou.jks
-    secret: changgou
-    alias: changgou
+    location: classpath:/changgou.jks  #证书的路径
+    secret: changgou  #密钥，加盐
+    alias: changgou #证书的别名
     password: changgou

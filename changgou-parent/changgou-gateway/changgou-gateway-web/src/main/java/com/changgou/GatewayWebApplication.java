@@ -24,7 +24,7 @@ public class GatewayWebApplication {
         SpringApplication.run(GatewayWebApplication.class,args);
     }
 
-    //创建一个ipKeyResolver 指定用户的IP
+    //创建一个ipKeyResolver 指定用户的IP,根据ip进行限流
     @Bean(name="ipKeyResolver")
     public KeyResolver keyResolver(){
         return new KeyResolver() {

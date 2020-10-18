@@ -17,6 +17,9 @@ import java.util.Map;
  */
 public class TestJWT {
 
+    /**
+     * 创建令牌
+     */
     @Test
     public void createJwt(){
         long currentTimeMillis = System.currentTimeMillis();
@@ -46,6 +49,9 @@ public class TestJWT {
 
     }
 
+    /**
+     * 解析令牌
+     */
     @Test
     public void parseJwt(){
         //String  st = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiLllK_kuIDnmoTmoIfor4YiLCJpc3MiOiLpooHlj5HogIUiLCJzdWIiOiLkuLvpopgifQ.AU33UoJ8Vz_ZoCtKcvCEm5R0UFknLE-06E49z1h0nfI";

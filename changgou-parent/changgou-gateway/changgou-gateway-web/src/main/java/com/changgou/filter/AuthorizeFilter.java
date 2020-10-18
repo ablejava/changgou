@@ -44,45 +44,59 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
 
         //4.1 从头header中获取令牌数据
         String token = request.getHeaders().getFirst(AUTHORIZE_TOKEN);
+        boolean hasToken = true;
 
+        //4.2 从cookie中中获取令牌数据
         if(StringUtils.isEmpty(token)){
-            //4.2 从cookie中中获取令牌数据
+
             HttpCookie first = request.getCookies().getFirst(AUTHORIZE_TOKEN);
             if(first!=null){
                 token=first.getValue();//就是令牌的数据
+                hasToken = false;
             }
         }
 
+        //4.3 从请求参数中获取令牌数据
         if(StringUtils.isEmpty(token)){
-            //4.3 从请求参数中获取令牌数据
+
             token= request.getQueryParams().getFirst(AUTHORIZE_TOKEN);
         }
 
+        //4.4. 如果没有数据    没有登录,要重定向到登录到页面
         if(StringUtils.isEmpty(token)){
-            //4.4. 如果没有数据    没有登录,要重定向到登录到页面
+
             response.setStatusCode(HttpStatus.SEE_OTHER);//303 302
             //location 指定的就是路径
             response.getHeaders().set("Location",loginURL+"?From="+request.getURI().toString());
             return response.setComplete();
+        } else {
+            //添加头信息 传递给 各个微服务()  如果不封装 OAuth2.0是没法校验的
+            if (!hasToken) {
+                if (token.startsWith("bearer ") && !token.startsWith("Bearer ")) {
+                    token = "Bearer " +token;
+                }
+                request.mutate().header(AUTHORIZE_TOKEN, token);
+            }
+
         }
 
 
         //5 解析令牌数据 ( 判断解析是否正确,正确 就放行 ,否则 结束)
 
         try {
-            //Claims claims = JwtUtil.parseJWT(token);
+            // Claims claims = JwtUtil.parseJWT(token);
 
 
 
         } catch (Exception e) {
             e.printStackTrace();
             //解析失败
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            response.setStatusCode(HttpStatus.UNAUTHORIZED); // 401
             return response.setComplete();
         }
 
-        //添加头信息 传递给 各个微服务()
-        request.mutate().header(AUTHORIZE_TOKEN,"Bearer "+ token);
+
+
 
 
 
