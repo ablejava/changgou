@@ -63,7 +63,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return null;
         }
 
-        //根据用户名查询用户信息
+        /**
+         * 根据用户名查询用户信息
+         * 1.没有令牌，生成令牌admin
+         * 2.feign调用之前，令牌需要携带过去
+         * 3.feign调用之前， 令牌需要存放Header头文件中
+         * 4.请求->fenign 调用，拦截器RequestInterceptor->feign调用之前执行拦截器
+         */
+
         //String pwd = new BCryptPasswordEncoder().encode("szitheima");
         String pwd = userFeign.findByUsername(username).getData().getPassword();
         //创建User对象  授予权限.GOODS_LIST  SECKILL_LIST

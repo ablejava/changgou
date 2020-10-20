@@ -8,6 +8,7 @@ import com.changgou.order.pojo.OrderItem;
 import com.changgou.order.service.CartService;
 import entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,15 @@ public class CartServiceImpl implements CartService {
 
         if(num<=0){
             //删除掉原来的商品
-            redisTemplate.boundHashOps("Cart_" + username).delete(id);
+            // redisTemplate.boundHashOps("Cart_" + username).delete(id);
+            BoundHashOperations boundHashOperations = redisTemplate.boundHashOps("Cart_" + username);
+            boundHashOperations.delete(id);
+            // 如果购物车数据为空，则连购物车一起移除
+            Long size = boundHashOperations.size();
+            if (size == null || size <=0) {
+                boundHashOperations.delete("Cart_" + username);
+            }
+
             return;
         }
 
@@ -73,7 +82,7 @@ public class CartServiceImpl implements CartService {
             orderItem.setMoney(orderItem.getNum() * orderItem.getPrice());//单价* 数量
             orderItem.setPayMoney(orderItem.getNum() * orderItem.getPrice());//单价* 数量
             orderItem.setImage(data.getImage());//商品的图片dizhi
-            //4.数据添加到redis中  key:用户名 field:sku的ID  value:购物车数据(order_item)
+            //4.数据添加到redis中  命名空间key:Cart_用户名 field:sku的ID  value:购物车数据(order_item)
 
             redisTemplate.boundHashOps("Cart_" + username).put(id, orderItem);// hset key field value   hget key field
         }
@@ -82,6 +91,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<OrderItem> list(String username) {
+        // 获取指定命名空间下所有数据
         List<OrderItem> orderItemList = redisTemplate.boundHashOps("Cart_" + username).values();
         return orderItemList;
     }

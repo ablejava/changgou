@@ -6,6 +6,7 @@ package com.changgou.filter;
  * @author www.itheima.com
  * @version 1.0
  * @package com.changgou.filter *
+ * 不需要认证就能访问的路径校验
  * @since 1.0
  */
 public class UrlFilter {
